@@ -98,13 +98,18 @@ function whatWouldYouLikeToDo() {
         .then(function (data) {
           console.log(data);
 
-          connection.query("SELECT * FROM departments", function (err, res) {
+          connection.query("INSERT INTO roles SET ?", 
+          {
+            role: data.roleInput
+          },
+          function (err, res) {
             if (err) throw err;
 
-            console.log(res)
+            console.log(res.affectedRows + " role inserted\n")
+            whatWouldYouLikeToDo();
           });
         })
-        .then(whatWouldYouLikeToDo());
+       
     }
 
 
