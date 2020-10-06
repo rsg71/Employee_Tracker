@@ -98,18 +98,18 @@ function whatWouldYouLikeToDo() {
         .then(function (data) {
           console.log(data);
 
-          connection.query("INSERT INTO roles SET ?", 
-          {
-            role: data.roleInput
-          },
-          function (err, res) {
-            if (err) throw err;
+          connection.query("INSERT INTO roles SET ?",
+            {
+              role: data.roleInput
+            },
+            function (err, res) {
+              if (err) throw err;
 
-            console.log(res.affectedRows + " role inserted\n")
-            whatWouldYouLikeToDo();
-          });
+              console.log(res.affectedRows + " role inserted\n")
+              whatWouldYouLikeToDo();
+            });
         })
-       
+
     }
 
 
@@ -118,45 +118,57 @@ function whatWouldYouLikeToDo() {
     // ADD EMPLOYEE
     // =================================================================
 
-    // else if(response.decision === "Add Employee") {
-    //     inquirer.prompt([
+    else if (response.decision === "Add Employee") {
+      inquirer.prompt([
 
-    //     {
-    //         type: "input",
-    //         name: "addEmployeeFirstName",
-    //         message: "What is the employee's first name?"
-    //     },
-    //     {
-    //         type: "input",
-    //         name: "addEmployeeSecondName",
-    //         message: "What is the employee's first name?"
-    //     },
-    // {
-    //     type: "list",
-    //     name: "addEmployeeRole",
-    //     message: "What is the employee's role?".
-    //        choices: [
-    //         "Sales lead",
-    //         "Salesperson",
-    //         "Lead Engineer",
-    //         "Software Engineer",
-    //         "Accountant",
-    //         "Lawyer"
-    //        ]
-    // },
-    // {
-    //     type: "input",
-    //     name: "addEmployeeDepartment",
-    //     message: "What is the employee's department?"
-    // }
-    //     ])
+        {
+          type: "input",
+          name: "addEmployeeFirstName",
+          message: "What is the employee's first name?"
+        },
+        {
+          type: "input",
+          name: "addEmployeeLastName",
+          message: "What is the employee's first name?"
+        },
+        {
+          type: "list",
+          name: "addEmployeeRole",
+          message: "What is the employee's role?",
+          choices: [
+            "Sales lead",
+            "Salesperson",
+            "Lead Engineer",
+            "Software Engineer",
+            "Accountant",
+            "Lawyer"
+          ]
+        },
+        {
+          type: "input",
+          name: "addEmployeeDepartment",
+          message: "What is the employee's department?"
+        }
+      ])
 
-    //     .then(function(data) {
-    //         console.log(data);
+        .then(function (data) {
+          console.log(data);
 
-    //         whatWouldYouLikeToDo();
-    //     })
-    // }
+          connection.query("INSERT INTO employees SET ?",
+            {
+              first_name: data.addEmployeeFirstName,
+              last_name: data.addEmployeeLastName,
+              role: data.addEmployeeRole,
+              department: addEmployeeDepartment
+            },
+            function (err, res) {
+              if (err) throw err;
+              console.log(res.affectedRows + " employees inserted\n")
+              whatWouldYouLikeToDo();
+            });
+
+        });
+    }
 
 
     // =================================================================
@@ -169,8 +181,8 @@ function whatWouldYouLikeToDo() {
         if (err) throw err;
 
         console.log(res);
+        whatWouldYouLikeToDo();
       });
-      // .then(whatWouldYouLikeToDo());
     }
 
     // =================================================================
@@ -178,17 +190,15 @@ function whatWouldYouLikeToDo() {
     // =================================================================
 
     else if (response.decision === "View All Roles") {
-      (function (data) {
-        console.log(data);
-
+     
         connection.query("SELECT * FROM roles", function (err, res) {
           if (err) throw err;
 
-          console.log(res)
+          console.log(res);
+          whatWouldYouLikeToDo();
         });
-      })
-        .then(whatWouldYouLikeToDo());
-    }
+      }
+    
 
 
     // =================================================================
@@ -196,17 +206,14 @@ function whatWouldYouLikeToDo() {
     // =================================================================
 
     else if (response.decision === "View All Employees") {
-      (function (data) {
-        console.log(data);
-
+     
         connection.query("SELECT * FROM employees", function (err, res) {
           if (err) throw err;
 
-          console.log(res)
+          console.log(res);
+          whatWouldYouLikeToDo();
         });
-      })
-        .then(whatWouldYouLikeToDo());
-    }
+      }
 
 
     // =================================================================
