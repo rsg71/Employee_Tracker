@@ -52,60 +52,60 @@ function whatWouldYouLikeToDo() {
     // ADD DEPARTMENT
     // =================================================================
 
-    // if (response.decision === "Add Department") {
-    //   inquirer.prompt([
-    //     {
-    //       type: "input",
-    //       name: "departmentInput",
-    //       message: "What is the name of the Department you would you like to add?"
-    //     }
-    //   ])
+    if (response.decision === "Add Department") {
+      inquirer.prompt([
+        {
+          type: "input",
+          name: "departmentInput",
+          message: "What is the name of the Department you would you like to add?"
+        }
+      ])
 
-    //     .then(function (data) {
-    //       console.log(data);
-    //       console.log("adding " + data.departmentInput + " to the database");
+        .then(function (data) {
+          console.log(data);
+          console.log("adding " + data.departmentInput + " to the database");
 
-    //       connection.query("INSERT INTO* departments SET ?",
-          
-                  
-          
-          
-          
-    //       function (err, res) {
-    //         if (err) throw err;
+          connection.query("INSERT INTO departments SET ?",
+            {
+              department_name: data.departmentInput
+            },
 
-    //         console.log(res)
-    //       });
-    //     })
-    //     .then(whatWouldYouLikeToDo());
-    // }
+            function (err, res) {
+              if (err) throw err;
+
+              console.log(res.affectedRows + " department inserted\n")
+              whatWouldYouLikeToDo();
+            });
+        })
+
+    }
 
     // =================================================================
     // ADD ROLE
     // =================================================================
 
-    // else if (response.decision === "Add Role") {
-    //   inquirer.prompt([
+    else if (response.decision === "Add Role") {
+      inquirer.prompt([
 
-    //     {
-    //       type: "input",
-    //       name: "roleInput",
-    //       message: "What type of role would you like to add?",
-          
-    //     }
-    //   ])
+        {
+          type: "input",
+          name: "roleInput",
+          message: "What type of role would you like to add?",
 
-    //     .then(function (data) {
-    //       console.log(data);
+        }
+      ])
 
-    //       connection.query("SELECT * FROM departments", function (err, res) {
-    //         if (err) throw err;
+        .then(function (data) {
+          console.log(data);
 
-    //         console.log(res)
-    //       });
-    //     })
-    //     .then(whatWouldYouLikeToDo());
-    // }
+          connection.query("SELECT * FROM departments", function (err, res) {
+            if (err) throw err;
+
+            console.log(res)
+          });
+        })
+        .then(whatWouldYouLikeToDo());
+    }
 
 
 
@@ -126,24 +126,24 @@ function whatWouldYouLikeToDo() {
     //         name: "addEmployeeSecondName",
     //         message: "What is the employee's first name?"
     //     },
-        // {
-        //     type: "list",
-        //     name: "addEmployeeRole",
-        //     message: "What is the employee's role?".
-        //        choices: [
-        //         "Sales lead",
-        //         "Salesperson",
-        //         "Lead Engineer",
-        //         "Software Engineer",
-        //         "Accountant",
-        //         "Lawyer"
-        //        ]
-        // },
-        // {
-        //     type: "input",
-        //     name: "addEmployeeDepartment",
-        //     message: "What is the employee's department?"
-        // }
+    // {
+    //     type: "list",
+    //     name: "addEmployeeRole",
+    //     message: "What is the employee's role?".
+    //        choices: [
+    //         "Sales lead",
+    //         "Salesperson",
+    //         "Lead Engineer",
+    //         "Software Engineer",
+    //         "Accountant",
+    //         "Lawyer"
+    //        ]
+    // },
+    // {
+    //     type: "input",
+    //     name: "addEmployeeDepartment",
+    //     message: "What is the employee's department?"
+    // }
     //     ])
 
     //     .then(function(data) {
@@ -158,14 +158,14 @@ function whatWouldYouLikeToDo() {
     // VIEW ALL DEPARTMENTS
     // =================================================================
 
-    if (response.decision === "View All Departments") {
+    else if (response.decision === "View All Departments") {
 
-          connection.query("SELECT * FROM departments", function (err, res) {
-            if (err) throw err;
+      connection.query("SELECT * FROM departments", function (err, res) {
+        if (err) throw err;
 
-            console.log(res);
-          });
-        // .then(whatWouldYouLikeToDo());
+        console.log(res);
+      });
+      // .then(whatWouldYouLikeToDo());
     }
 
     // =================================================================
@@ -173,15 +173,15 @@ function whatWouldYouLikeToDo() {
     // =================================================================
 
     else if (response.decision === "View All Roles") {
-     (function (data) {
-          console.log(data);
+      (function (data) {
+        console.log(data);
 
-          connection.query("SELECT * FROM roles", function (err, res) {
-            if (err) throw err;
+        connection.query("SELECT * FROM roles", function (err, res) {
+          if (err) throw err;
 
-            console.log(res)
-          });
-        })
+          console.log(res)
+        });
+      })
         .then(whatWouldYouLikeToDo());
     }
 
@@ -190,16 +190,16 @@ function whatWouldYouLikeToDo() {
     // VIEW ALL EMPLOYEES
     // =================================================================
 
-    else if(response.decision === "View All Employees") {
-       (function (data) {
-          console.log(data);
+    else if (response.decision === "View All Employees") {
+      (function (data) {
+        console.log(data);
 
-          connection.query("SELECT * FROM employees", function (err, res) {
-            if (err) throw err;
+        connection.query("SELECT * FROM employees", function (err, res) {
+          if (err) throw err;
 
-            console.log(res)
-          });
-        })
+          console.log(res)
+        });
+      })
         .then(whatWouldYouLikeToDo());
     }
 
