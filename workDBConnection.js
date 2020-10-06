@@ -248,13 +248,10 @@ function whatWouldYouLikeToDo() {
           message: "Are you sure you would you like to quit?"
         }
       ])
-
-        .then(function (err) {
-          if (err) throw err;
+      
+        .then(function () {
           connection.end();
-        })
-
-
+        });
     }
 
 
