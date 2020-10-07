@@ -4,26 +4,27 @@ CREATE DATABASE work_db;
 
 USE work_db;
 
-CREATE TABLE departments(
-    id INT AUTO_INCREMENT NOT NULL,
-    department_name VARCHAR (80),
-    PRIMARY KEY(id)
-);
+-- ===================================================================
 
-/
-CREATE TABLE employees (
+CREATE TABLE department (
     id INT AUTO_INCREMENT NOT NULL,
-    first_name VARCHAR(80),
-    last_name VARCHAR(80),
-    role VARCHAR(80),
-    department VARCHAR(80),
+    name VARCHAR(30) NOT NULL,
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE role (
+    id INT AUTO_INCREMENT NOT NULL,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL(8,0) NOT NULL,
+    department_id INT(10) NOT NULL,
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE employee (
+    id INT AUTO_INCREMENT NOT NULL,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INT(10) NOT NULL,
+    manager_id INT(10),
     PRIMARY KEY(id)
 )
-/
-CREATE TABLE roles (
-    id INT AUTO_INCREMENT NOT NULL,
-    role VARCHAR(80)
-    PRIMARY KEY(id)
-);
-
-

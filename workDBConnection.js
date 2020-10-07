@@ -46,7 +46,7 @@ function whatWouldYouLikeToDo() {
     ]
 
   }).then(function (response) {
-    console.log(response);
+    // console.log(response);
 
     // =================================================================
     // ADD DEPARTMENT
@@ -65,9 +65,9 @@ function whatWouldYouLikeToDo() {
           console.log(data);
           console.log("adding " + data.departmentInput + " to the database");
 
-          connection.query("INSERT INTO departments SET ?",
+          connection.query("INSERT INTO department SET ?",
             {
-              department_name: data.departmentInput
+              name: data.departmentInput
             },
 
             function (err, res) {
@@ -85,31 +85,74 @@ function whatWouldYouLikeToDo() {
     // =================================================================
 
     else if (response.decision === "Add Role") {
-      inquirer.prompt([
 
-        {
-          type: "input",
-          name: "roleInput",
-          message: "What type of role would you like to add?",
+      connection.query("SELECT * from department", function (err, departmentData) {
+        if (err) throw err;
+        console.log(departmentData)
+       
+        // for (var i = 0; i < departmentData.length; i++) {
+        //   objects[i] = {id: departmentData[i].id, name: departmentData[i].name }
+        //   departmentArray.push(objects[i]);
+        // }
 
-        }
-      ])
+        const departments = departmentData.map(data => data.name)
+        const departmentId = departmentData.map(data => data.id)
 
-        .then(function (data) {
-          console.log(data);
+        console.log(departments) //this will show the names, so we're good here 
+        console.log(departmentId)
+        // console.log(departmentArray)
 
-          connection.query("INSERT INTO roles SET ?",
-            {
-              role: data.roleInput
-            },
-            function (err, res) {
-              if (err) throw err;
+        inquirer.prompt([
+          {
+            type: "input",
+            name: "titleInput",
+            message: "What type of role would you like to add?",
+          },
+          {
+            type: "input",
+            name: "salaryInput",
+            message: "What is the salary of the role?",
+          },
+          {
+            type: "list",
+            name: "departmentInput",
+            message: "Which department is the role part of?",
+            choices: departments
+          }
+        ])
 
-              console.log(res.affectedRows + " role inserted\n")
-              whatWouldYouLikeToDo();
-            });
-        })
+          .then(function (data) {
+            console.log(data);
+            // console.log(data.departmentInput)
+            // let deptID = "";
+            // for(i =0; i < departmentArray.length; i++) {
+            //   if(data.departmentInput == departmentArray[i].name) {
+            //     deptID = departmentArr[i].id;
+            //   }
+            // }
 
+            
+
+            connection.query("INSERT INTO role SET ?",
+              {
+                title: data.titleInput,
+                salary: data.salaryInput,
+                department_id: data.departmentInput // i want this value >>> department_id: "____" <<<<< to have an INT that corresponds with the department id
+              },
+              function (err, res) {
+                if (err) throw err;
+
+                console.log(res.affectedRows + " role inserted\n")
+                whatWouldYouLikeToDo();
+              });
+          })
+
+
+
+      })
+
+
+      // ===================================
     }
 
 
@@ -129,7 +172,7 @@ function whatWouldYouLikeToDo() {
         {
           type: "input",
           name: "addEmployeeLastName",
-          message: "What is the employee's first name?"
+          message: "What is the employee's last name?"
         },
         {
           type: "list",
@@ -146,20 +189,20 @@ function whatWouldYouLikeToDo() {
         },
         {
           type: "input",
-          name: "addEmployeeDepartment",
-          message: "What is the employee's department?"
+          name: "addEmployeeManager",
+          message: "Who is the employee's manager?"
         }
       ])
 
         .then(function (data) {
           console.log(data);
 
-          connection.query("INSERT INTO employees SET ?",
+          connection.query("INSERT INTO employee SET ?",
             {
               first_name: data.addEmployeeFirstName,
               last_name: data.addEmployeeLastName,
-              role: data.addEmployeeRole,
-              department: addEmployeeDepartment
+              role_id: data.addEmployeeRole,
+              manager_id: data.addEmployeeManager
             },
             function (err, res) {
               if (err) throw err;
@@ -172,33 +215,39 @@ function whatWouldYouLikeToDo() {
 
 
     // =================================================================
-    // VIEW ALL DEPARTMENTS
+    // VIEW ALL DEPARTMENTS                                           +
     // =================================================================
 
     else if (response.decision === "View All Departments") {
 
-      connection.query("SELECT * FROM departments", function (err, res) {
+      connection.query("SELECT * FROM department", function (err, res) {
         if (err) throw err;
 
-        console.log(res);
+        // console.log(res);
+
+        for (var i = 0; i < res.length; i++) {
+          console.log(`department: ${res[i].name}`);
+        }
         whatWouldYouLikeToDo();
       });
     }
 
     // =================================================================
-    // VIEW ALL ROLES
+    // VIEW ALL ROLES                                                 +
     // =================================================================
 
     else if (response.decision === "View All Roles") {
-     
-        connection.query("SELECT * FROM roles", function (err, res) {
-          if (err) throw err;
 
-          console.log(res);
-          whatWouldYouLikeToDo();
-        });
-      }
-    
+      connection.query("SELECT * FROM role", function (err, res) {
+        if (err) throw err;
+
+        for (var i = 0; i < res.length; i++) {
+          console.log(`role: ${res[i].title}`);
+        }
+        whatWouldYouLikeToDo();
+      });
+    }
+
 
 
     // =================================================================
@@ -206,39 +255,43 @@ function whatWouldYouLikeToDo() {
     // =================================================================
 
     else if (response.decision === "View All Employees") {
-     
-        connection.query("SELECT * FROM employees", function (err, res) {
-          if (err) throw err;
 
-          console.log(res);
-          whatWouldYouLikeToDo();
-        });
-      }
+      connection.query("SELECT * FROM employee", function (err, res) {
+        if (err) throw err;
+
+        console.log(`id  first_name    last_name     title`)
+        console.log(`--  ----------   -----------  ----------------`)
+        for (var i = 0; i < res.length; i++) {
+          console.log(`${res[i].id}  ${res[i].first_name}           ${res[i].last_name}        ${res[i].role_id}`);
+        }
+        whatWouldYouLikeToDo();
+      });
+    }
 
 
     // =================================================================
     // UPDATE EMPLOYEE ROLES
     // =================================================================
 
-    // else if(response.decision === "Update Employee Roles") {
-    //     inquirer.prompt([
+    else if(response.decision === "Update Employee Roles") {
+        inquirer.prompt([
 
-    //         // ==========================================================================================================
-    //         // same here; I believe the employee list should be dynamic
-    //         // ==========================================================================================================    
-    //     {
-    //         type: "input",
-    //         name: "employeeUpdate",
-    //         message: "Which employee would you like to update?"
-    //     }
-    //     ])
+            // ==========================================================================================================
+            // same here; I believe the employee list should be dynamic
+            // ==========================================================================================================    
+        {
+            type: "input",
+            name: "employeeUpdate",
+            message: "Which employee would you like to update?"
+        }
+        ])
 
-    //     .then(function(data) {
-    //         console.log(data);
+        .then(function(data) {
+            console.log(data);
 
-    //         whatWouldYouLikeToDo();
-    //     })
-    // }
+            whatWouldYouLikeToDo();
+        })
+    }
 
     else if (response.decision === "Quit") {
       inquirer.prompt([
@@ -248,7 +301,7 @@ function whatWouldYouLikeToDo() {
           message: "Are you sure you would you like to quit?"
         }
       ])
-      
+
         .then(function () {
           connection.end();
         });

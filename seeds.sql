@@ -1,29 +1,22 @@
-INSERT INTO departments (department_name)
-VALUES ("Sales");
-
-INSERT INTO departments (department_name)
-VALUES ("Engineering");
-
-INSERT INTO departments (department_name)
-VALUES ("Finance");
-
-INSERT INTO departments (department_name)
-VALUES ("Legal");
+INSERT INTO department (name)
+VALUES 
+("Sales"),
+("Engineering"),
+("Finance"), 
+("Legal");
 
 
-
-
-
-INSERT INTO roles (role) 
+INSERT INTO role (role) 
 VALUES 
 ("Sales Lead"),
 ("Salesperson"),
 ("Lead Engineer"),
 ("Software Engineer"),
 ("Accountant"),
+("Legal Team Lead")
 ("Lawyer");
 
-INSERT INTO employees (first_name, last_name, role, department)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
 ("Abby", "Devlin", "Accountant", "Finance"),
 ("Lukas", "Hackett", "Lawyer", "Legal"),
