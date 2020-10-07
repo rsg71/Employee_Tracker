@@ -124,12 +124,12 @@ function whatWouldYouLikeToDo() {
           .then(function (data) {
             console.log(data);
             // console.log(data.departmentInput)
-            // let deptID = "";
-            // for(i =0; i < departmentArray.length; i++) {
-            //   if(data.departmentInput == departmentArray[i].name) {
-            //     deptID = departmentArr[i].id;
-            //   }
-            // }
+            let deptID = "";
+            for(i =0; i < departmentData.length; i++) {
+              if(data.departmentInput == departmentData[i].name) {
+                deptID = departmentData[i].id;
+              }
+            }
 
             
 
@@ -137,7 +137,7 @@ function whatWouldYouLikeToDo() {
               {
                 title: data.titleInput,
                 salary: data.salaryInput,
-                department_id: data.departmentInput // i want this value >>> department_id: "____" <<<<< to have an INT that corresponds with the department id
+                department_id: deptID // i want this value >>> department_id: "____" <<<<< to have an INT that corresponds with the department id
               },
               function (err, res) {
                 if (err) throw err;
