@@ -49,7 +49,7 @@ function whatWouldYouLikeToDo() {
     // console.log(response);
 
     // =================================================================
-    // ADD DEPARTMENT
+    // ADD DEPARTMENT                                                 +
     // =================================================================
 
     if (response.decision === "Add Department") {
@@ -81,7 +81,7 @@ function whatWouldYouLikeToDo() {
     }
 
     // =================================================================
-    // ADD ROLE
+    // ADD ROLE                                                       +
     // =================================================================
 
     else if (response.decision === "Add Role") {
@@ -89,11 +89,8 @@ function whatWouldYouLikeToDo() {
       connection.query("SELECT * from department", function (err, departmentData) {
         if (err) throw err;
         console.log(departmentData)
-       
-        // for (var i = 0; i < departmentData.length; i++) {
-        //   objects[i] = {id: departmentData[i].id, name: departmentData[i].name }
-        //   departmentArray.push(objects[i]);
-        // }
+
+
 
         const departments = departmentData.map(data => data.name)
         const departmentId = departmentData.map(data => data.id)
@@ -125,13 +122,12 @@ function whatWouldYouLikeToDo() {
             console.log(data);
             // console.log(data.departmentInput)
             let deptID = "";
-            for(i =0; i < departmentData.length; i++) {
-              if(data.departmentInput == departmentData[i].name) {
+            for (i = 0; i < departmentData.length; i++) {
+              if (data.departmentInput == departmentData[i].name) {
                 deptID = departmentData[i].id;
               }
             }
 
-            
 
             connection.query("INSERT INTO role SET ?",
               {
@@ -147,70 +143,77 @@ function whatWouldYouLikeToDo() {
               });
           })
 
-
-
       })
-
-
       // ===================================
     }
 
 
 
     // =================================================================
-    // ADD EMPLOYEE
+    // ADD EMPLOYEE                                                 * think I need join here too
     // =================================================================
 
     else if (response.decision === "Add Employee") {
-      inquirer.prompt([
 
-        {
-          type: "input",
-          name: "addEmployeeFirstName",
-          message: "What is the employee's first name?"
-        },
-        {
-          type: "input",
-          name: "addEmployeeLastName",
-          message: "What is the employee's last name?"
-        },
-        {
-          type: "list",
-          name: "addEmployeeRole",
-          message: "What is the employee's role?",
-          choices: [
-            "Sales lead",
-            "Salesperson",
-            "Lead Engineer",
-            "Software Engineer",
-            "Accountant",
-            "Lawyer"
-          ]
-        },
-        {
-          type: "input",
-          name: "addEmployeeManager",
-          message: "Who is the employee's manager?"
+      connection.query("SELECT * from employee", function (err, employeeData) {
+        if (err) throw err;
+
+        console.log(employeeData)
+
+
+
+        const employees = employeeData.map(data => data.role_id)
+
+        for (var i = 0; i < employeeData.length; i++) {
+
         }
-      ])
 
-        .then(function (data) {
-          console.log(data);
+        inquirer.prompt([
 
-          connection.query("INSERT INTO employee SET ?",
-            {
-              first_name: data.addEmployeeFirstName,
-              last_name: data.addEmployeeLastName,
-              role_id: data.addEmployeeRole,
-              manager_id: data.addEmployeeManager
-            },
-            function (err, res) {
-              if (err) throw err;
-              console.log(res.affectedRows + " employees inserted\n")
-              whatWouldYouLikeToDo();
-            });
+          {
+            type: "input",
+            name: "addEmployeeFirstName",
+            message: "What is the employee's first name?"
+          },
+          {
+            type: "input",
+            name: "addEmployeeLastName",
+            message: "What is the employee's last name?"
+          },
+          {
+            type: "list",
+            name: "addEmployeeRole",
+            message: "What is the employee's role?",
+            choices: employees
+          },
+          {
+            type: "input",
+            name: "addEmployeeManager",
+            message: "Who is the employee's manager?"
+          }
+        ])
 
-        });
+          .then(function (data) {
+            console.log(data);
+
+            connection.query("INSERT INTO employee SET ?",
+              {
+                first_name: data.addEmployeeFirstName,
+                last_name: data.addEmployeeLastName,
+                role_id: data.addEmployeeRole,
+                manager_id: data.addEmployeeManager
+              },
+              function (err, res) {
+                if (err) throw err;
+                console.log(res.affectedRows + " employees inserted\n")
+                whatWouldYouLikeToDo();
+              });
+
+          });
+
+
+      });
+
     }
 
 
@@ -226,7 +229,7 @@ function whatWouldYouLikeToDo() {
         // console.log(res);
 
         for (var i = 0; i < res.length; i++) {
-          console.log(`department: ${res[i].name}`);
+          console.log(`${res[i].id} | ${res[i].name}`);
         }
         whatWouldYouLikeToDo();
       });
@@ -242,7 +245,7 @@ function whatWouldYouLikeToDo() {
         if (err) throw err;
 
         for (var i = 0; i < res.length; i++) {
-          console.log(`role: ${res[i].title}`);
+          console.log(`${res[i].id} |${res[i].title}| ${res[i].salary}| ${res[i].department_id}`);
         }
         whatWouldYouLikeToDo();
       });
@@ -251,7 +254,7 @@ function whatWouldYouLikeToDo() {
 
 
     // =================================================================
-    // VIEW ALL EMPLOYEES
+    // VIEW ALL EMPLOYEES                                           + * BUT I NEED IT TO JOIN
     // =================================================================
 
     else if (response.decision === "View All Employees") {
@@ -260,9 +263,9 @@ function whatWouldYouLikeToDo() {
         if (err) throw err;
 
         console.log(`id  first_name    last_name     title`)
-        console.log(`--  ----------   -----------  ----------------`)
+        console.log(`--  ----------   -----------  ------------`)
         for (var i = 0; i < res.length; i++) {
-          console.log(`${res[i].id}  ${res[i].first_name}           ${res[i].last_name}        ${res[i].role_id}`);
+          console.log(`${res[i].id}  ${res[i].first_name}           ${res[i].last_name}           ${res[i].role_id}`);
         }
         whatWouldYouLikeToDo();
       });
@@ -273,38 +276,31 @@ function whatWouldYouLikeToDo() {
     // UPDATE EMPLOYEE ROLES
     // =================================================================
 
-    else if(response.decision === "Update Employee Roles") {
-        inquirer.prompt([
+    else if (response.decision === "Update Employee Roles") {
 
-            // ==========================================================================================================
-            // same here; I believe the employee list should be dynamic
-            // ==========================================================================================================    
-        {
-            type: "input",
+      connection.query("SELECT * from department", function (err, departmentData) {
+        if (err) throw err;
+        console.log(departmentData)
+
+        inquirer.prompt([
+          {
+            type: "list",
             name: "employeeUpdate",
             message: "Which employee would you like to update?"
-        }
+          }
         ])
 
-        .then(function(data) {
+          .then(function (data) {
             console.log(data);
 
             whatWouldYouLikeToDo();
-        })
+          })
+
+      });
     }
 
-    else if (response.decision === "Quit") {
-      inquirer.prompt([
-        {
-          type: "confirm",
-          name: "quit",
-          message: "Are you sure you would you like to quit?"
-        }
-      ])
-
-        .then(function () {
+    else if (response.decision === "Quit") {      
           connection.end();
-        });
     }
 
 
