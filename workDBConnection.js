@@ -162,7 +162,8 @@ function whatWouldYouLikeToDo() {
 
 
 
-        const employees = employeeData.map(data => data.role_id)
+        const employees = employeeData.map(data => data.role_id) //do i need join for this?
+        // i will also need one of these for the employee manager list
 
         for (var i = 0; i < employeeData.length; i++) {
 
@@ -278,29 +279,52 @@ function whatWouldYouLikeToDo() {
 
     else if (response.decision === "Update Employee Roles") {
 
-      connection.query("SELECT * from department", function (err, departmentData) {
+      connection.query("SELECT * from employee", function (err, employeeData) {
         if (err) throw err;
-        console.log(departmentData)
+        console.log(employeeData)
+
+        const employees = employeeData.map(data => data.last_name)
+        // const employees = employeeData.map(data => data.first_name + " " + data.last_name)
 
         inquirer.prompt([
           {
             type: "list",
-            name: "employeeUpdate",
-            message: "Which employee would you like to update?"
+            name: "employeeUpdateChoice",
+            message: "Which employee would you like to update?",
+            choices: employees
+          },
+          {
+            type: "input",
+            name: "employeeUpdateRoleInput",
+            message: "What should their new role be?"
           }
         ])
 
           .then(function (data) {
             console.log(data);
 
-            whatWouldYouLikeToDo();
+            connection.query("UPDATE employee SET ? WHERE ?",
+            [
+              {
+                role_id: data.employeeUpdateRoleInput
+              },
+              {
+                last_name: data.employeeUpdateChoice
+              }
+            ],
+            function (err) {
+              if (err) throw err;
+              console.log("employee role updated!\n");
+              whatWouldYouLikeToDo();
+            });
+
           })
 
       });
     }
 
-    else if (response.decision === "Quit") {      
-          connection.end();
+    else if (response.decision === "Quit") {
+      connection.end();
     }
 
 
