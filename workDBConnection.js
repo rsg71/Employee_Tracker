@@ -49,7 +49,7 @@ function whatWouldYouLikeToDo() {
     // console.log(response);
 
     // =================================================================
-    // ADD DEPARTMENT                                                 +
+    // ADD DEPARTMENT                                                 +++
     // =================================================================
 
     if (response.decision === "Add Department") {
@@ -81,22 +81,22 @@ function whatWouldYouLikeToDo() {
     }
 
     // =================================================================
-    // ADD ROLE                                                       +
+    // ADD ROLE                                                       +++
     // =================================================================
 
     else if (response.decision === "Add Role") {
 
       connection.query("SELECT * from department", function (err, departmentData) {
         if (err) throw err;
-        console.log(departmentData)
+        // console.log(departmentData)
 
 
 
         const departments = departmentData.map(data => data.name)
         const departmentId = departmentData.map(data => data.id)
 
-        console.log(departments) //this will show the names, so we're good here 
-        console.log(departmentId)
+        // console.log(departments) //this will show the names, so we're good here 
+        // console.log(departmentId)
         // console.log(departmentArray)
 
         inquirer.prompt([
@@ -119,7 +119,7 @@ function whatWouldYouLikeToDo() {
         ])
 
           .then(function (data) {
-            console.log(data);
+            // console.log(data);
             // console.log(data.departmentInput)
             let deptID = "";
             for (i = 0; i < departmentData.length; i++) {
@@ -158,7 +158,7 @@ function whatWouldYouLikeToDo() {
       connection.query("SELECT * from employee", function (err, employeeData) {
         if (err) throw err;
 
-        console.log(employeeData)
+        // console.log(employeeData)
 
 
 
@@ -219,7 +219,7 @@ function whatWouldYouLikeToDo() {
 
 
     // =================================================================
-    // VIEW ALL DEPARTMENTS                                           +
+    // VIEW ALL DEPARTMENTS                                           +++
     // =================================================================
 
     else if (response.decision === "View All Departments") {
@@ -227,17 +227,17 @@ function whatWouldYouLikeToDo() {
       connection.query("SELECT * FROM department", function (err, res) {
         if (err) throw err;
 
-        // console.log(res);
+        console.table(res);
 
-        for (var i = 0; i < res.length; i++) {
-          console.log(`${res[i].id} | ${res[i].name}`);
-        }
+        // for (var i = 0; i < res.length; i++) {
+        //   console.log(`${res[i].id} | ${res[i].name}`);
+        // }
         whatWouldYouLikeToDo();
       });
     }
 
     // =================================================================
-    // VIEW ALL ROLES                                                 +
+    // VIEW ALL ROLES                                                 +++
     // =================================================================
 
     else if (response.decision === "View All Roles") {
@@ -245,9 +245,11 @@ function whatWouldYouLikeToDo() {
       connection.query("SELECT * FROM role", function (err, res) {
         if (err) throw err;
 
-        for (var i = 0; i < res.length; i++) {
-          console.log(`${res[i].id} |${res[i].title}| ${res[i].salary}| ${res[i].department_id}`);
-        }
+        // for (var i = 0; i < res.length; i++) {
+        //   console.log(`${res[i].id} |${res[i].title}| ${res[i].salary}| ${res[i].department_id}`);
+        // }
+
+        console.table(res)
         whatWouldYouLikeToDo();
       });
     }
@@ -255,33 +257,35 @@ function whatWouldYouLikeToDo() {
 
 
     // =================================================================
-    // VIEW ALL EMPLOYEES                                           + * BUT I NEED IT TO JOIN
+    // VIEW ALL EMPLOYEES                                           +++
     // =================================================================
 
     else if (response.decision === "View All Employees") {
 
-      connection.query("SELECT * FROM employee", function (err, res) {
+      connection.query("SELECT employee.id, employee.first_name, employee.last_name, role.title AS role, role.salary, employee.manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id", function (err, res) {
         if (err) throw err;
 
-        console.log(`id  first_name    last_name     title`)
-        console.log(`--  ----------   -----------  ------------`)
-        for (var i = 0; i < res.length; i++) {
-          console.log(`${res[i].id}  ${res[i].first_name}           ${res[i].last_name}           ${res[i].role_id}`);
-        }
+        console.table(res)
+
+        // console.log(`id  first_name    last_name     role            salary        manager`)
+        // console.log(`--  ----------   -----------  ------------`)
+        // for (var i = 0; i < res.length; i++) {
+        //   console.log(`${res[i].id}  ${res[i].first_name}           ${res[i].last_name}      ${res[i].role}     ${res[i].salary}  ${res[i].manager_id}`);
+        // }
         whatWouldYouLikeToDo();
       });
     }
 
 
     // =================================================================
-    // UPDATE EMPLOYEE ROLES
+    // UPDATE EMPLOYEE ROLES                                          + (last name functionality)
     // =================================================================
 
     else if (response.decision === "Update Employee Roles") {
 
       connection.query("SELECT * from employee", function (err, employeeData) {
         if (err) throw err;
-        console.log(employeeData)
+        // console.log(employeeData)
 
         const employees = employeeData.map(data => data.last_name)
         // const employees = employeeData.map(data => data.first_name + " " + data.last_name)
@@ -304,22 +308,20 @@ function whatWouldYouLikeToDo() {
             console.log(data);
 
             connection.query("UPDATE employee SET ? WHERE ?",
-            [
-              {
-                role_id: data.employeeUpdateRoleInput
-              },
-              {
-                last_name: data.employeeUpdateChoice
-              }
-            ],
-            function (err) {
-              if (err) throw err;
-              console.log("employee role updated!\n");
-              whatWouldYouLikeToDo();
-            });
-
+              [
+                {
+                  role_id: data.employeeUpdateRoleInput
+                },
+                {
+                  last_name: data.employeeUpdateChoice
+                }
+              ],
+              function (err) {
+                if (err) throw err;
+                console.log("employee role updated!\n");
+                whatWouldYouLikeToDo();
+              });
           })
-
       });
     }
 
